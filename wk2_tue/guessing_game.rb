@@ -10,17 +10,17 @@ class GuessingGame
   end
 
   def play
-    result = ""
+    result = nil
     number = rand(1..100)
     guess = @player.get_guess(result)
     count = 1
 
     until guess == number
       if guess > number
-        puts "Too High!"
+        puts "#{guess} was too High!"
         result = "High"
       else
-        puts "Too Low!"
+        puts "#{guess} was too Low!"
         result = "Low"
       end
       guess = @player.get_guess(result)
