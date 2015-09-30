@@ -4,7 +4,7 @@ require "set"
 board = (1..9).to_a
 player1 = ""
 player2 = ""
-game_mode = "e"
+game_mode = "E"
 
 #Winning!
 	WINSET =[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[6,4,2]]
@@ -53,17 +53,6 @@ def available_moves(board)
   board.reject { |x| x.is_a?(String) }
 end
 
-=begin
-def get_possible_moves
-	open_spots = Array.new
-	board.each do |a|
-		if a != "X" && a != "O"
-			open_spots.push(a)
-		end 
-	 end
-end
-=end
-
 def get_mode
 	# todo: Have the user pick the game mode
 	puts "(e)asy - Human vs. Human"
@@ -71,18 +60,23 @@ def get_mode
 	puts "(h)ard - Human vs. Evil Computer"
 	puts "n(i)ghtmare - Human vs. Really Evil Computer"
 	puts "Select game mode:"
-	gets.chomp
+	gets.chomp.upcase
 
 end
 
-def take_turn(current_player)
+def take_turn(current_player,game_mode,board)
 	#select function based on mode
 	case game_mode
-	when "e"
+	when "E"
 		prompt_player(current_player)
-	when "n"
-	when "h"
-	when "i"
+	when "N"
+		if current_player == "Computer"
+			prompt_computer(board)
+		else
+			prompt_player(current_player)
+		end if
+	when "H"
+	when "I"
 	else
 		error
 	end
@@ -93,8 +87,8 @@ def get_player_name(player)
 	gets.chomp
 end
 
-def postmortem(current_player,current_moves)
-	if iswin?(current_moves)
+def postmortem(board,current_player)
+	if iswin?(board)
 		puts "#{current_player} wins!"
 	else
 		puts "It's a draw!"
@@ -104,61 +98,48 @@ def postmortem(current_player,current_moves)
 end
 
 def game_over?(board,move_count)
-# if win or board full
-we_are_done = false
-if move_count > 2 
+# if win or board full 
 	if move_count == 9
 		we_are_done = true
 	elsif iswin?(board)
 		we_are_done = true
 	end
-end 
 
 we_are_done
 end 
 
-def iswin?(board)
+def draw?(board)
+  available_moves(board).empty?
+end
 
+def iswin?(board)
 	  WINSET.any? do |x, y, z|
     	board[x] == board[y] && board[y] == board[z]
   end
 	#binding.pry
-	
 end
 
-def tictactoe(board,player1,player2)
-	p1_moves = Array.new
-	p2_moves = Array.new
+def tictactoe(board,player1,player2,game_mode)
 	move_count = 0
 	current_player = player2
-	current_moves = p2_moves
-
 
   until game_over?(board,move_count)
     #toggle player
     # todo: don't toggle players if not in easy mode
-    if current_player == player1
-      current_player = player2
-      current_moves = p2_moves
-    else
-      current_player = player1
-      current_moves = p1_moves
-    end
+	current_player = current_player == player1 ? player2 : player1
+  
 	show_board(board)
-    move = take_turn(current_player)
-    current_moves.push(move)
-
+    move = take_turn(current_player,game_mode,board)
+  
     if current_player == player1
-    	board[move.to_i - 1] = "X" 
-    	
+    	board[move.to_i - 1] = "X" 	
     else
     	board[move.to_i - 1] = "O"
-
     end 
     move_count += 1
   end
   show_board(board)
-  postmortem(current_player,current_moves)
+  postmortem(board,current_player)
 end
 
 def play_again?
@@ -166,24 +147,28 @@ def play_again?
 	gets.chomp
 end
 
-def play_tictactoe(board,player1,player2)
+def play_tictactoe(board,player1,player2,game_mode)
 	greeting
 	#get mode(game_mode)
  	player1 = get_player_name(1)
- 	player2 = get_player_name(2)
+ 	if game_mode == "E"
+ 		player2 = get_player_name(2)
+ 	else
+ 		player2 = "Computer" 
+ 	end 
 	board = (1..9).to_a
  	
- 	tictactoe(board,player1,player2)
+ 	tictactoe(board,player1,player2,game_mode)
 end
 
-def play(board,player1,player2)
-  play_tictactoe(board,player1,player2)
+def play(board,player1,player2,game_mode)
+  play_tictactoe(board,player1,player2,game_mode)
   choice = play_again?
   until choice == "n"
-    play_tictactoe(board,player1,player2)
+    play_tictactoe(board,player1,player2,game_mode)
     choice = play_again?
   end
 end 
 
-play(board,player1,player2) 
+play(board,player1,player2,game_mode) 
 

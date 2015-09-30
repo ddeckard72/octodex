@@ -18,7 +18,7 @@ class SmartPlayer
 			@low_point = 1
 			@high_point = 100
 		end
-		
+		puts "#{@low_point} - #{@high_point}"
 		@guess = rand(@low_point..@high_point)
 		#binding.pry
 		#@guess
