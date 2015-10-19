@@ -1,0 +1,41 @@
+.octocat {
+	float: left;
+  margin: 5px;
+  
+}
+  .octocat img{
+    width: 350px;
+    border: solid grey 3px;
+    border-width: 1px;
+  }
+
+ul {
+  list-style-type: none;
+}
+.image-caption{
+  float: right;
+}
+
+.image-number:before{
+  content: "# ";
+}
+.authors{
+  float: right;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+.authors img{
+	width: 25px;
+	border: none;
+}
+.image-footer{
+  color: grey;
+  border-style: none none solid;
+  border-width: 1px;
+  padding-bottom: 15px;
+  padding-top: 10px;
+}
